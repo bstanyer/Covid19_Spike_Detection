@@ -1,0 +1,172 @@
+---
+title: "FinalProjectBrandonStanyer2"
+output: html_document
+date: "2023-06-11"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(caret)
+library(rpart)
+library(rpart.plot)
+library(kernlab)
+library(readr)
+library(ggplot2)
+```
+
+```{r}
+allData <- read_csv("allData.csv")
+```
+
+
+# Initial Visualizations
+
+```{r}
+glimpse(allData)
+```
+
+
+
+```{r}
+ggplot(allData) +
+  geom_line(aes(x=date, y=daily_cases/100000, color = "Daily Cases (x100,000)")) +
+  geom_line(aes(x=date, y=common_cold, color="Populartiy of Search Term: Common Cold")) +
+  xlab("Dates") +
+  ylab("") +
+  labs(color = "Color") +
+  theme(legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right"
+    )
+```
+
+```{r}
+cor(allData$common_cold, allData$daily_cases)
+```
+
+
+```{r}
+ggplot(allData) +
+  geom_line(aes(x=date, y=daily_cases/100000, color = "Daily Cases (x100,000)")) +
+  geom_line(aes(x=date, y=abdominal_pain, color="Populartiy of Search Term: Abdominal Pain")) +
+  xlab("Dates") +
+  ylab("") +
+  labs(color = "Color") +
+  theme(legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right"
+    )
+```
+
+```{r}
+ggplot(allData) +
+  geom_line(aes(x=date, y=daily_cases/100000, color = "Daily Cases (x100,000)")) +
+  geom_line(aes(x=date, y=fatigue, color="Populartiy of Search Term: Fatigue")) +
+  xlab("Dates") +
+  ylab("") +
+  labs(color = "Color") +
+  theme(legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right"
+    )
+```
+```{r}
+ggplot(allData) +
+  geom_line(aes(x=date, y=daily_cases/100000, color = "Daily Cases (x100,000)")) +
+  geom_line(aes(x=date, y=fever, color="Populartiy of Search Term: Fever")) +
+  xlab("Dates") +
+  ylab("") +
+  labs(color = "Color") +
+  theme(legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right"
+    )
+```
+
+```{r}
+ggplot(allData) +
+  geom_line(aes(x=date, y=daily_cases/1000000, color = "Daily Cases (x1,000,000)")) +
+  geom_line(aes(x=date, y=anosmia, color="Populartiy of Search Term: Anosmia")) +
+  xlab("Dates") +
+  ylab("") +
+  labs(color = "Color") +
+  theme(legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right"
+    )
+```
+
+
+# Creating a Model to Predict Covid-19 Spikes
+
+```{r}
+#setting a seed for repeatability
+set.seed(100)
+
+#partitioning the data into training set and testing set
+trainList <- createDataPartition(allData$spike, p=0.8, list = FALSE)
+trainSet <- allData[trainList,]
+testSet <- allData[-trainList,]
+```
+
+## RPART Model
+
+```{r}
+spike.rpart <- rpart(spike ~ common_cold + abdominal_pain + anosmia + fatigue + fever, data = trainSet)
+```
+
+```{r}
+rpart.plot(spike.rpart)
+```
+
+```{r}
+# The rpart model appears quite accurate, achieving a 89% accuracy on our test set
+rpartPred <- predict(spike.rpart, newdata = testSet, type = "class")
+confusionMatrix(rpartPred, testSet$spike)
+```
+
+
+
+## SVM Linear Model
+
+```{r}
+# building the model
+spike.svml <- train(spike ~ common_cold + abdominal_pain + anosmia + fatigue + fever, data = trainSet, method = "svmLinear", preProc = c("center","scale"))
+
+spike.svml
+```
+```{r}
+# The model appears to be quite accurate
+svmlPred <- predict(spike.svml, newdata = testSet, type = "raw")
+confusionMatrix(svmlPred, testSet$spike)
+```
+
+## SVM Radial Model
+
+```{r}
+# building the model
+spike.svmr <- train(spike ~ common_cold + abdominal_pain + anosmia + fatigue + fever, data = trainSet, method = "svmRadial", preProc = c("center","scale"))
+
+spike.svmr
+```
+
+```{r}
+# This model is the most accurate with 90% accuracy
+svmrPred <- predict(spike.svmr, newdata = testSet, type = "raw")
+confusionMatrix(svmrPred, testSet$spike)
+```
+
+
+
+
+
+
+
+
+
+
+
