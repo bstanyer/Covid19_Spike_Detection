@@ -5,4 +5,5 @@ This project focused on predicting spikes in Covid-19 cases by analyzing the fre
 
 The models successfully demonstrated that relative search term frequency alone could predict Covid-19 case spikes with notable accuracy. This approach provided a powerful, real-time alternative to traditional data collection, offering potential for early warnings and health system preparedness. The project underscores the potential of search data to serve as a predictive tool for public health trends, not only for Covid-19 but also for future outbreaks and other health-related phenomena.
 
-![alt text](http://url/to/img.png)
+<img width="450" alt="Picture1" src="https://github.com/user-attachments/assets/815fa8af-24c1-46b3-be98-6f4b90c0989b">
+<img width="200" alt="Picture2" src="https://github.com/user-attachments/assets/74494c76-caa8-4a8f-9c01-d6add598970b">
