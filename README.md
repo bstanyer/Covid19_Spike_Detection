@@ -1,4 +1,4 @@
-# Covid19_Spike_Detection
+# Covid19 Spike Detection (R)
 ### Analyzing Google search term data to predict Covid-19 case spikes.
 
 This project focused on predicting spikes in Covid-19 cases by analyzing the frequency of specific Google search terms related to symptoms, bypassing the need for traditional data sources like hospital reports. By using search data as a proxy for real-world symptom reporting, the project aimed to develop a model that could anticipate surges in cases with minimal delay. The dataset included search frequencies for symptoms commonly associated with Covid-19 over the past two years, and machine learning models were trained to identify correlations between these search trends and actual case spikes.
